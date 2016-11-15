@@ -35,11 +35,23 @@ function confusion_to_latex(sites, confusion_matrix, opt)
         process.stdout.write(str);
     }
 
+    var tw = function(str)
+    {
+        if(opt.array)
+        {
+            return "\\text{" + str + "}";
+        }
+        else
+        {
+            return str;
+        }
+    }
+
     var start = function()
     {
         if(opt.array)
         {
-            console.log("\\[");
+            console.log("\\(");
             write("\\begin{array}{");
         }
         else
@@ -54,7 +66,7 @@ function confusion_to_latex(sites, confusion_matrix, opt)
         if(opt.array)
         {
             console.log("\\end{array}");
-            console.log("\\]");
+            console.log("\\)");
         }
         else
         {
@@ -64,16 +76,16 @@ function confusion_to_latex(sites, confusion_matrix, opt)
 
     var header_line = function()
     {
-        write("\\multicolumn{3}{|c|}{\\text{X}}");
+        write("\\multicolumn{3}{|c|}{" + tw("X") + "}");
         sites.forEach(function(site, index)
         {
             if(opt.alias)
             {
-                write(" & \\text{(" + index + ")}");
+                write(" & " + tw("(" + index + ")"));
             }
             else
             {
-                write(" & \\text{" + site + "}");
+                write(" & " + tw(site));
             }
         });
         console.log(" \\\\ \\hline");
@@ -86,16 +98,16 @@ function confusion_to_latex(sites, confusion_matrix, opt)
     {
         if(opt.alias)
         {
-            write("\\text{" + index + "} & : & \\text{" + ground + "}");
+            write(tw(index) + " & : & " + tw(ground));
         }
         else
         {
-            write("\\multicolumn{3}{|c|}{\\text{" + ground + "}}");
+            write("\\multicolumn{3}{|c|}{" + tw(ground) + "}");
         }
         sites.forEach(function(neighbor)
         {
             var value = (confusion_matrix[ground][neighbor] || 0);
-            if(opt.color)
+            if(opt.color && value != 0)
             {
                 var color = (ground == neighbor ? "green" : "red");
                 var sum = sites.reduce(function(a, b) { return a + (confusion_matrix[ground][b] || 0); }, 0);
@@ -125,6 +137,7 @@ options
   .option('-a, --array', 'Format output as array instead of tabular')
   .option('-x, --alias', 'Shorten header row for large tables')
   .option('-v, --verbose', 'Print A LOT of output')
+  .option('-s, --standalone', 'Print a self-contained LaTeX document')
   .parse(process.argv);
 
 var input_file = options.args[0];
@@ -193,7 +206,23 @@ fs.readFile(input_file, 'utf8', function (err,data)
         console.log("LATEX START");
         console.log("-----------");
     }
+    if(options.standalone)
+    {
+        console.log("\\documentclass[crop]{standalone}");
+
+        if(options.color)
+            console.log("\\usepackage[table]{xcolor}");
+
+        if(options.array)
+            console.log("\\usepackage{amsmath}");
+
+        console.log("\\begin{document}");
+    }
     confusion_to_latex(sites, confusion, options);
+    if(options.standalone)
+    {
+        console.log("\\end{document}");
+    }
     if(options.verbose)
     {
         console.log("-----------");
