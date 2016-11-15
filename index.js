@@ -81,11 +81,11 @@ function confusion_to_latex(sites, confusion_matrix, opt)
         {
             if(opt.alias)
             {
-                write(" & " + tw("(" + index + ")"));
+                write(" & " + tw(site));
             }
             else
             {
-                write(" & " + tw(site));
+                write(" & " + tw("(" + index + ")"));
             }
         });
         console.log(" \\\\ \\hline");
@@ -98,11 +98,11 @@ function confusion_to_latex(sites, confusion_matrix, opt)
     {
         if(opt.alias)
         {
-            write(tw(index) + " & : & " + tw(ground));
+            write("\\multicolumn{3}{|c|}{" + tw(ground) + "}");
         }
         else
         {
-            write("\\multicolumn{3}{|c|}{" + tw(ground) + "}");
+            write(tw(index) + " & : & " + tw(ground));
         }
         sites.forEach(function(neighbor)
         {
