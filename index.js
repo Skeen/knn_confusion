@@ -32,7 +32,7 @@ function data_to_confusion(data)
     return {sites: sites, confusion: confusion_matrix};
 }
 
-function confusion_to_latex(data)
+function confusion_to_latex(data, opt)
 {
     var sites = data.sites;
     var confusion_matrix = data.confusion;
@@ -42,28 +42,68 @@ function confusion_to_latex(data)
         process.stdout.write(str);
     }
 
-    console.log("\\[");
-    console.log("\\begin{array}{|l|" + Array(sites.length+1).join('c|') + "} \\hline");
-    // Header line
-    write("\\text{X}");
-    sites.forEach(function(site)
+    var start = function()
     {
-        write(" & \\text{" + site + "}");
-    });
-    console.log(" \\\\ \\hline");
+        if(opt.array)
+        {
+            console.log("\\[");
+            write("\\begin{array}{");
+        }
+        else
+        {
+            write("\\begin{tabular}{");
+        }
+        console.log("|l|" + Array(sites.length+1).join('c|') + "} \\hline");
+    }
 
+    var end = function()
+    {
+        if(opt.array)
+        {
+            console.log("\\end{array}");
+            console.log("\\]");
+        }
+        else
+        {
+            console.log("\\end{tabular}");
+        }
+    }
+
+    var header_line = function()
+    {
+        write("\\text{X}");
+        sites.forEach(function(site)
+                {
+                    write(" & \\text{" + site + "}");
+                });
+        console.log(" \\\\ \\hline");
+    }
+
+    start();
+    header_line();
+    // Confusion matrix itself
     sites.forEach(function(ground)
     {
         write("\\text{" + ground + "}");
         sites.forEach(function(neighbor)
         {
             var value = (confusion_matrix[ground][neighbor] || 0);
-            write(" & " + value);
+            if(opt.color)
+            {
+                var color = (ground == neighbor ? "green" : "red");
+                var sum = sites.reduce(function(a, b) { return a + (confusion_matrix[ground][b] || 0); }, 0);
+                var percent = value / sum * 100;
+
+                write(" & \\cellcolor{" + color + "!" + percent + "}" + value);
+            }
+            else
+            {
+                write(" & " + value);
+            }
         });
         console.log(" \\\\ \\hline");
     });
-    console.log("\\end{array}");
-    console.log("\\]");
+    end();
 }
 
 
@@ -80,6 +120,6 @@ fs.readFile(process.argv[2], 'utf8', function (err,data)
     //console.log(confusion);
 
     console.log("LATEX START");
-    confusion_to_latex(confusion);
+    confusion_to_latex(confusion, {color:true, array:true});
     console.log("LATEX END");
 });
