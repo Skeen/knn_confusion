@@ -1,42 +1,35 @@
-fs = require('fs')
+function data_to_sites(data)
+{
+    // TODO: Clean-up and prettify
+    var sites_object = {};
+    data.forEach(function(element)
+    {
+        sites_object[element.ground_truth] = 0;
+    });
+
+    var sites = [];
+    for( var i in sites_object ) {
+        sites.push(i);
+    }
+    return sites;
+}
 
 function data_to_confusion(data)
 {
-    var data_to_sites = function(data)
-    {
-        var sites_object = {};
-        data.forEach(function(element)
-        {
-            sites_object[element.ground_truth] = 0;
-        });
-
-        var sites =[];
-        for( var i in sites_object ) {
-            sites.push(i);
-        }
-        return sites;
-    }
-
-    var sites = data_to_sites(data);
-    console.log("Sites:", sites);
-
     var confusion_matrix = {};
     // Start counting
     data.forEach(function(element)
     {
+        // TODO: Clean-up
         confusion_matrix[element.ground_truth] = (confusion_matrix[element.ground_truth] || {});
         confusion_matrix[element.ground_truth][element.nearest_neighbor] = (confusion_matrix[element.ground_truth][element.nearest_neighbor] || 0) + 1;
     });
-    console.log(confusion_matrix);
 
-    return {sites: sites, confusion: confusion_matrix};
+    return confusion_matrix;
 }
 
-function confusion_to_latex(data, opt)
+function confusion_to_latex(sites, confusion_matrix, opt)
 {
-    var sites = data.sites;
-    var confusion_matrix = data.confusion;
-
     var write = function(str)
     {
         process.stdout.write(str);
@@ -53,7 +46,7 @@ function confusion_to_latex(data, opt)
         {
             write("\\begin{tabular}{");
         }
-        console.log("|l|" + Array(sites.length+1).join('c|') + "} \\hline");
+        console.log("|lcl|" + Array(sites.length+1).join('c|') + "} \\hline");
     }
 
     var end = function()
@@ -71,20 +64,34 @@ function confusion_to_latex(data, opt)
 
     var header_line = function()
     {
-        write("\\text{X}");
-        sites.forEach(function(site)
-                {
-                    write(" & \\text{" + site + "}");
-                });
+        write("\\multicolumn{3}{|c|}{\\text{X}}");
+        sites.forEach(function(site, index)
+        {
+            if(opt.alias)
+            {
+                write(" & \\text{(" + index + ")}");
+            }
+            else
+            {
+                write(" & \\text{" + site + "}");
+            }
+        });
         console.log(" \\\\ \\hline");
     }
 
     start();
     header_line();
     // Confusion matrix itself
-    sites.forEach(function(ground)
+    sites.forEach(function(ground, index)
     {
-        write("\\text{" + ground + "}");
+        if(opt.alias)
+        {
+            write("\\text{" + index + "} & : & \\text{" + ground + "}");
+        }
+        else
+        {
+            write("\\multicolumn{3}{|c|}{\\text{" + ground + "}}");
+        }
         sites.forEach(function(neighbor)
         {
             var value = (confusion_matrix[ground][neighbor] || 0);
@@ -106,20 +113,91 @@ function confusion_to_latex(data, opt)
     end();
 }
 
+//var options = JSON.parse(process.argv[3]);
 
-fs.readFile(process.argv[2], 'utf8', function (err,data) 
+var options = require('commander');
+
+options
+  .version('0.0.1')
+  .usage('[options] <file>')
+  .option('-p, --packages', 'Print information about required packages')
+  .option('-c, --color', 'Add color to output table')
+  .option('-a, --array', 'Format output as array instead of tabular')
+  .option('-x, --alias', 'Shorten header row for large tables')
+  .option('-v, --verbose', 'Print A LOT of output')
+  .parse(process.argv);
+
+var input_file = options.args[0];
+if(input_file == undefined)
+{
+    console.error();
+    console.error("Fatal error: No input file provided");
+    options.help();
+}
+
+/* // TODO: Handle spurious arguments somehow
+var spurious = options.args[1];
+if(spurious != undefined)
+{
+    console.error();
+    console.error("Spurious argument(s) found:", options.args.shift());
+    console.error("NOTE: Options go in front of file-argument");
+    options.help();
+}
+*/
+
+var fs = require('fs')
+fs.readFile(input_file, 'utf8', function (err,data) 
 {
     if (err) {
-        return console.log(err);
+        console.error();
+        console.error("Fatal error: Unable to open input file");
+        console.error();
+        console.error(err);
+        process.exit(-1);
+    }
+    // Parse the input file as JSON
+    var json;
+    try
+    {
+        json = JSON.parse(data);
+    }
+    catch(err)
+    {
+        console.error();
+        console.error("Fatal error: Input file is not valid JSON!");
+        console.error();
+        console.error(err);
+        process.exit(-1);
     }
 
-    var json = JSON.parse(data);
-    console.log(json);
+    if(options.verbose)
+        console.log(json);
+
+    var sites = data_to_sites(json.data);
+    if(options.verbose)
+        console.log(sites);
 
     var confusion = data_to_confusion(json.data);
-    //console.log(confusion);
+    if(options.verbose)
+        console.log(confusion);
 
-    console.log("LATEX START");
-    confusion_to_latex(confusion, {color:true, array:true});
-    console.log("LATEX END");
+    if(options.packages && options.color)
+        console.log("Color requires:", "\\usepackage[table]{xcolor}");
+    if(options.packages && options.array)
+        console.log("Array requires:", "\\usepackage{amsmath}");
+
+    if(options.verbose)
+    {
+        console.log("-----------");
+        console.log("LATEX START");
+        console.log("-----------");
+    }
+    confusion_to_latex(sites, confusion, options);
+    if(options.verbose)
+    {
+        console.log("-----------");
+        console.log(" LATEX END ");
+        console.log("-----------");
+    }
 });

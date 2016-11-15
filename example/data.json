@@ -1,0 +1,729 @@
+{
+"data" : [
+{
+"nearest_neighbor" : "BestBuy.com",
+"accuracy" : 1.000000,
+"ground_truth" : "BestBuy.com",
+"ground_truth_UID" : "data/BestBuy.com_10_0_1478868360223.csv"
+},
+{
+"nearest_neighbor" : "BestBuy.com",
+"accuracy" : 1.000000,
+"ground_truth" : "BestBuy.com",
+"ground_truth_UID" : "data/BestBuy.com_1_0_1478867672777.csv"
+},
+{
+"nearest_neighbor" : "BestBuy.com",
+"accuracy" : 1.000000,
+"ground_truth" : "BestBuy.com",
+"ground_truth_UID" : "data/BestBuy.com_2_0_1478867751401.csv"
+},
+{
+"nearest_neighbor" : "BestBuy.com",
+"accuracy" : 1.000000,
+"ground_truth" : "BestBuy.com",
+"ground_truth_UID" : "data/BestBuy.com_3_0_1478867824961.csv"
+},
+{
+"nearest_neighbor" : "BestBuy.com",
+"accuracy" : 1.000000,
+"ground_truth" : "BestBuy.com",
+"ground_truth_UID" : "data/BestBuy.com_5_0_1478867979119.csv"
+},
+{
+"nearest_neighbor" : "BestBuy.com",
+"accuracy" : 1.000000,
+"ground_truth" : "BestBuy.com",
+"ground_truth_UID" : "data/BestBuy.com_6_0_1478868054183.csv"
+},
+{
+"nearest_neighbor" : "BestBuy.com",
+"accuracy" : 1.000000,
+"ground_truth" : "BestBuy.com",
+"ground_truth_UID" : "data/BestBuy.com_4_0_1478867904538.csv"
+},
+{
+"nearest_neighbor" : "BestBuy.com",
+"accuracy" : 1.000000,
+"ground_truth" : "BestBuy.com",
+"ground_truth_UID" : "data/BestBuy.com_8_0_1478868208984.csv"
+},
+{
+"nearest_neighbor" : "BestBuy.com",
+"accuracy" : 1.000000,
+"ground_truth" : "BestBuy.com",
+"ground_truth_UID" : "data/BestBuy.com_7_0_1478868130443.csv"
+},
+{
+"nearest_neighbor" : "BestBuy.com",
+"accuracy" : 1.000000,
+"ground_truth" : "BestBuy.com",
+"ground_truth_UID" : "data/BestBuy.com_9_0_1478868282394.csv"
+},
+{
+"nearest_neighbor" : "Google.com",
+"accuracy" : 0.558231,
+"ground_truth" : "Google.com",
+"ground_truth_UID" : "data/Google.com_10_0_1478871689235.csv"
+},
+{
+"nearest_neighbor" : "Google.com",
+"accuracy" : 0.527365,
+"ground_truth" : "Google.com",
+"ground_truth_UID" : "data/Google.com_1_0_1478870830881.csv"
+},
+{
+"nearest_neighbor" : "Google.com",
+"accuracy" : 0.530248,
+"ground_truth" : "Google.com",
+"ground_truth_UID" : "data/Google.com_3_0_1478870986459.csv"
+},
+{
+"nearest_neighbor" : "Google.com",
+"accuracy" : 0.522593,
+"ground_truth" : "Google.com",
+"ground_truth_UID" : "data/Google.com_6_0_1478871377555.csv"
+},
+{
+"nearest_neighbor" : "Google.com",
+"accuracy" : 0.533038,
+"ground_truth" : "Google.com",
+"ground_truth_UID" : "data/Google.com_7_0_1478871451433.csv"
+},
+{
+"nearest_neighbor" : "Google.com",
+"accuracy" : 0.518645,
+"ground_truth" : "Google.com",
+"ground_truth_UID" : "data/Google.com_8_0_1478871529449.csv"
+},
+{
+"nearest_neighbor" : "Google.com",
+"accuracy" : 0.538354,
+"ground_truth" : "Google.com",
+"ground_truth_UID" : "data/Google.com_9_0_1478871613658.csv"
+},
+{
+"nearest_neighbor" : "Overstock.com",
+"accuracy" : 0.203560,
+"ground_truth" : "JCPenney.com",
+"ground_truth_UID" : "data/JCPenney.com_10_0_1478869163000.csv"
+},
+{
+"nearest_neighbor" : "eBay.com",
+"accuracy" : 0.170639,
+"ground_truth" : "JCPenney.com",
+"ground_truth_UID" : "data/JCPenney.com_1_0_1478868440496.csv"
+},
+{
+"nearest_neighbor" : "JCPenney.com",
+"accuracy" : 0.252700,
+"ground_truth" : "JCPenney.com",
+"ground_truth_UID" : "data/JCPenney.com_2_0_1478868519658.csv"
+},
+{
+"nearest_neighbor" : "Overstock.com",
+"accuracy" : 0.253275,
+"ground_truth" : "JCPenney.com",
+"ground_truth_UID" : "data/JCPenney.com_3_0_1478868601398.csv"
+},
+{
+"nearest_neighbor" : "JCPenney.com",
+"accuracy" : 0.206009,
+"ground_truth" : "JCPenney.com",
+"ground_truth_UID" : "data/JCPenney.com_4_0_1478868680432.csv"
+},
+{
+"nearest_neighbor" : "LLBean.com",
+"accuracy" : 0.337361,
+"ground_truth" : "JCPenney.com",
+"ground_truth_UID" : "data/JCPenney.com_5_0_1478868757754.csv"
+},
+{
+"nearest_neighbor" : "LLBean.com",
+"accuracy" : 0.340256,
+"ground_truth" : "JCPenney.com",
+"ground_truth_UID" : "data/JCPenney.com_6_0_1478868837846.csv"
+},
+{
+"nearest_neighbor" : "WomanWithin.com",
+"accuracy" : 0.252029,
+"ground_truth" : "JCPenney.com",
+"ground_truth_UID" : "data/JCPenney.com_7_0_1478868920542.csv"
+},
+{
+"nearest_neighbor" : "LLBean.com",
+"accuracy" : 0.338189,
+"ground_truth" : "JCPenney.com",
+"ground_truth_UID" : "data/JCPenney.com_9_0_1478869084238.csv"
+},
+{
+"nearest_neighbor" : "Kmart.com",
+"accuracy" : 0.526783,
+"ground_truth" : "Kmart.com",
+"ground_truth_UID" : "data/Kmart.com_10_0_1478873293605.csv"
+},
+{
+"nearest_neighbor" : "Kmart.com",
+"accuracy" : 0.344544,
+"ground_truth" : "Kmart.com",
+"ground_truth_UID" : "data/Kmart.com_1_0_1478872612979.csv"
+},
+{
+"nearest_neighbor" : "Kmart.com",
+"accuracy" : 0.256428,
+"ground_truth" : "Kmart.com",
+"ground_truth_UID" : "data/Kmart.com_2_0_1478872687862.csv"
+},
+{
+"nearest_neighbor" : "Kmart.com",
+"accuracy" : 0.264252,
+"ground_truth" : "Kmart.com",
+"ground_truth_UID" : "data/Kmart.com_3_0_1478872763505.csv"
+},
+{
+"nearest_neighbor" : "Sears.com",
+"accuracy" : 0.255171,
+"ground_truth" : "Kmart.com",
+"ground_truth_UID" : "data/Kmart.com_4_0_1478872839876.csv"
+},
+{
+"nearest_neighbor" : "Kmart.com",
+"accuracy" : 0.347049,
+"ground_truth" : "Kmart.com",
+"ground_truth_UID" : "data/Kmart.com_5_0_1478872916593.csv"
+},
+{
+"nearest_neighbor" : "Kmart.com",
+"accuracy" : 0.261095,
+"ground_truth" : "Kmart.com",
+"ground_truth_UID" : "data/Kmart.com_6_0_1478872991902.csv"
+},
+{
+"nearest_neighbor" : "Kmart.com",
+"accuracy" : 0.351962,
+"ground_truth" : "Kmart.com",
+"ground_truth_UID" : "data/Kmart.com_7_0_1478873066204.csv"
+},
+{
+"nearest_neighbor" : "Kmart.com",
+"accuracy" : 0.263292,
+"ground_truth" : "Kmart.com",
+"ground_truth_UID" : "data/Kmart.com_8_0_1478873143563.csv"
+},
+{
+"nearest_neighbor" : "Kmart.com",
+"accuracy" : 0.351551,
+"ground_truth" : "Kmart.com",
+"ground_truth_UID" : "data/Kmart.com_9_0_1478873219124.csv"
+},
+{
+"nearest_neighbor" : "OldNavy.com",
+"accuracy" : 0.172079,
+"ground_truth" : "Kohls.com",
+"ground_truth_UID" : "data/Kohls.com_10_0_1478867600155.csv"
+},
+{
+"nearest_neighbor" : "Kohls.com",
+"accuracy" : 0.503925,
+"ground_truth" : "Kohls.com",
+"ground_truth_UID" : "data/Kohls.com_1_0_1478866908498.csv"
+},
+{
+"nearest_neighbor" : "Walmart.com",
+"accuracy" : 0.208824,
+"ground_truth" : "Kohls.com",
+"ground_truth_UID" : "data/Kohls.com_3_0_1478867058936.csv"
+},
+{
+"nearest_neighbor" : "Kohls.com",
+"accuracy" : 0.210843,
+"ground_truth" : "Kohls.com",
+"ground_truth_UID" : "data/Kohls.com_4_0_1478867134550.csv"
+},
+{
+"nearest_neighbor" : "Kohls.com",
+"accuracy" : 0.345802,
+"ground_truth" : "Kohls.com",
+"ground_truth_UID" : "data/Kohls.com_5_0_1478867213814.csv"
+},
+{
+"nearest_neighbor" : "Kohls.com",
+"accuracy" : 0.257464,
+"ground_truth" : "Kohls.com",
+"ground_truth_UID" : "data/Kohls.com_7_0_1478867370122.csv"
+},
+{
+"nearest_neighbor" : "Kohls.com",
+"accuracy" : 0.341719,
+"ground_truth" : "Kohls.com",
+"ground_truth_UID" : "data/Kohls.com_8_0_1478867445027.csv"
+},
+{
+"nearest_neighbor" : "eBay.com",
+"accuracy" : 0.336665,
+"ground_truth" : "Kohls.com",
+"ground_truth_UID" : "data/Kohls.com_9_0_1478867522446.csv"
+},
+{
+"nearest_neighbor" : "LLBean.com",
+"accuracy" : 0.528467,
+"ground_truth" : "LLBean.com",
+"ground_truth_UID" : "data/LLBean.com_1_0_1478873376242.csv"
+},
+{
+"nearest_neighbor" : "LLBean.com",
+"accuracy" : 0.512151,
+"ground_truth" : "LLBean.com",
+"ground_truth_UID" : "data/LLBean.com_2_0_1478873455245.csv"
+},
+{
+"nearest_neighbor" : "LLBean.com",
+"accuracy" : 0.506069,
+"ground_truth" : "LLBean.com",
+"ground_truth_UID" : "data/LLBean.com_3_0_1478873536683.csv"
+},
+{
+"nearest_neighbor" : "LLBean.com",
+"accuracy" : 0.510530,
+"ground_truth" : "LLBean.com",
+"ground_truth_UID" : "data/LLBean.com_4_0_1478873612864.csv"
+},
+{
+"nearest_neighbor" : "BestBuy.com",
+"accuracy" : 0.507750,
+"ground_truth" : "LLBean.com",
+"ground_truth_UID" : "data/LLBean.com_5_0_1478873698533.csv"
+},
+{
+"nearest_neighbor" : "BestBuy.com",
+"accuracy" : 0.504860,
+"ground_truth" : "LLBean.com",
+"ground_truth_UID" : "data/LLBean.com_6_0_1478873777980.csv"
+},
+{
+"nearest_neighbor" : "LLBean.com",
+"accuracy" : 0.522378,
+"ground_truth" : "LLBean.com",
+"ground_truth_UID" : "data/LLBean.com_7_0_1478873864653.csv"
+},
+{
+"nearest_neighbor" : "LLBean.com",
+"accuracy" : 0.504058,
+"ground_truth" : "LLBean.com",
+"ground_truth_UID" : "data/LLBean.com_8_0_1478873944443.csv"
+},
+{
+"nearest_neighbor" : "LLBean.com",
+"accuracy" : 0.516416,
+"ground_truth" : "LLBean.com",
+"ground_truth_UID" : "data/LLBean.com_9_0_1478874022978.csv"
+},
+{
+"nearest_neighbor" : "Kmart.com",
+"accuracy" : 0.253824,
+"ground_truth" : "LandsEnd.com",
+"ground_truth_UID" : "data/LandsEnd.com_10_0_1478872532484.csv"
+},
+{
+"nearest_neighbor" : "LandsEnd.com",
+"accuracy" : 0.260030,
+"ground_truth" : "LandsEnd.com",
+"ground_truth_UID" : "data/LandsEnd.com_1_0_1478871773283.csv"
+},
+{
+"nearest_neighbor" : "LandsEnd.com",
+"accuracy" : 0.253549,
+"ground_truth" : "LandsEnd.com",
+"ground_truth_UID" : "data/LandsEnd.com_2_0_1478871856908.csv"
+},
+{
+"nearest_neighbor" : "LandsEnd.com",
+"accuracy" : 0.344393,
+"ground_truth" : "LandsEnd.com",
+"ground_truth_UID" : "data/LandsEnd.com_3_0_1478871941311.csv"
+},
+{
+"nearest_neighbor" : "eBay.com",
+"accuracy" : 0.252371,
+"ground_truth" : "LandsEnd.com",
+"ground_truth_UID" : "data/LandsEnd.com_4_0_1478872030544.csv"
+},
+{
+"nearest_neighbor" : "eBay.com",
+"accuracy" : 0.338269,
+"ground_truth" : "LandsEnd.com",
+"ground_truth_UID" : "data/LandsEnd.com_5_0_1478872115277.csv"
+},
+{
+"nearest_neighbor" : "LandsEnd.com",
+"accuracy" : 0.211829,
+"ground_truth" : "LandsEnd.com",
+"ground_truth_UID" : "data/LandsEnd.com_6_0_1478872198213.csv"
+},
+{
+"nearest_neighbor" : "LandsEnd.com",
+"accuracy" : 0.203413,
+"ground_truth" : "LandsEnd.com",
+"ground_truth_UID" : "data/LandsEnd.com_7_0_1478872285464.csv"
+},
+{
+"nearest_neighbor" : "LandsEnd.com",
+"accuracy" : 0.342987,
+"ground_truth" : "LandsEnd.com",
+"ground_truth_UID" : "data/LandsEnd.com_8_0_1478872367569.csv"
+},
+{
+"nearest_neighbor" : "LandsEnd.com",
+"accuracy" : 0.254098,
+"ground_truth" : "LandsEnd.com",
+"ground_truth_UID" : "data/LandsEnd.com_9_0_1478872449267.csv"
+},
+{
+"nearest_neighbor" : "OldNavy.com",
+"accuracy" : 0.260723,
+"ground_truth" : "OldNavy.com",
+"ground_truth_UID" : "data/OldNavy.com_1_0_1478870036157.csv"
+},
+{
+"nearest_neighbor" : "OldNavy.com",
+"accuracy" : 0.261295,
+"ground_truth" : "OldNavy.com",
+"ground_truth_UID" : "data/OldNavy.com_2_0_1478870118461.csv"
+},
+{
+"nearest_neighbor" : "OldNavy.com",
+"accuracy" : 0.346318,
+"ground_truth" : "OldNavy.com",
+"ground_truth_UID" : "data/OldNavy.com_3_0_1478870196340.csv"
+},
+{
+"nearest_neighbor" : "OldNavy.com",
+"accuracy" : 0.258977,
+"ground_truth" : "OldNavy.com",
+"ground_truth_UID" : "data/OldNavy.com_4_0_1478870277381.csv"
+},
+{
+"nearest_neighbor" : "eBay.com",
+"accuracy" : 0.255263,
+"ground_truth" : "OldNavy.com",
+"ground_truth_UID" : "data/OldNavy.com_5_0_1478870355060.csv"
+},
+{
+"nearest_neighbor" : "OldNavy.com",
+"accuracy" : 0.341286,
+"ground_truth" : "OldNavy.com",
+"ground_truth_UID" : "data/OldNavy.com_6_0_1478870433311.csv"
+},
+{
+"nearest_neighbor" : "OldNavy.com",
+"accuracy" : 0.220195,
+"ground_truth" : "OldNavy.com",
+"ground_truth_UID" : "data/OldNavy.com_7_0_1478870512179.csv"
+},
+{
+"nearest_neighbor" : "OldNavy.com",
+"accuracy" : 0.351035,
+"ground_truth" : "OldNavy.com",
+"ground_truth_UID" : "data/OldNavy.com_8_0_1478870595004.csv"
+},
+{
+"nearest_neighbor" : "OldNavy.com",
+"accuracy" : 0.506025,
+"ground_truth" : "OldNavy.com",
+"ground_truth_UID" : "data/OldNavy.com_9_0_1478870675513.csv"
+},
+{
+"nearest_neighbor" : "Overstock.com",
+"accuracy" : 0.516265,
+"ground_truth" : "Overstock.com",
+"ground_truth_UID" : "data/Overstock.com_10_0_1478874918218.csv"
+},
+{
+"nearest_neighbor" : "Overstock.com",
+"accuracy" : 0.340235,
+"ground_truth" : "Overstock.com",
+"ground_truth_UID" : "data/Overstock.com_1_0_1478874182881.csv"
+},
+{
+"nearest_neighbor" : "Overstock.com",
+"accuracy" : 0.258989,
+"ground_truth" : "Overstock.com",
+"ground_truth_UID" : "data/Overstock.com_2_0_1478874263779.csv"
+},
+{
+"nearest_neighbor" : "Overstock.com",
+"accuracy" : 0.517870,
+"ground_truth" : "Overstock.com",
+"ground_truth_UID" : "data/Overstock.com_3_0_1478874347813.csv"
+},
+{
+"nearest_neighbor" : "Overstock.com",
+"accuracy" : 0.510232,
+"ground_truth" : "Overstock.com",
+"ground_truth_UID" : "data/Overstock.com_4_0_1478874431988.csv"
+},
+{
+"nearest_neighbor" : "Overstock.com",
+"accuracy" : 0.515951,
+"ground_truth" : "Overstock.com",
+"ground_truth_UID" : "data/Overstock.com_5_0_1478874511588.csv"
+},
+{
+"nearest_neighbor" : "Overstock.com",
+"accuracy" : 0.502718,
+"ground_truth" : "Overstock.com",
+"ground_truth_UID" : "data/Overstock.com_6_0_1478874596193.csv"
+},
+{
+"nearest_neighbor" : "Overstock.com",
+"accuracy" : 0.345958,
+"ground_truth" : "Overstock.com",
+"ground_truth_UID" : "data/Overstock.com_7_0_1478874681335.csv"
+},
+{
+"nearest_neighbor" : "eBay.com",
+"accuracy" : 0.338096,
+"ground_truth" : "Overstock.com",
+"ground_truth_UID" : "data/Overstock.com_8_0_1478874764402.csv"
+},
+{
+"nearest_neighbor" : "Overstock.com",
+"accuracy" : 0.355031,
+"ground_truth" : "Overstock.com",
+"ground_truth_UID" : "data/Overstock.com_9_0_1478874841515.csv"
+},
+{
+"nearest_neighbor" : "Kmart.com",
+"accuracy" : 0.502015,
+"ground_truth" : "Sears.com",
+"ground_truth_UID" : "data/Sears.com_10_0_1478869958899.csv"
+},
+{
+"nearest_neighbor" : "Kmart.com",
+"accuracy" : 0.255874,
+"ground_truth" : "Sears.com",
+"ground_truth_UID" : "data/Sears.com_2_0_1478869330652.csv"
+},
+{
+"nearest_neighbor" : "Sears.com",
+"accuracy" : 0.169158,
+"ground_truth" : "Sears.com",
+"ground_truth_UID" : "data/Sears.com_3_0_1478869412492.csv"
+},
+{
+"nearest_neighbor" : "Kmart.com",
+"accuracy" : 0.153784,
+"ground_truth" : "Sears.com",
+"ground_truth_UID" : "data/Sears.com_4_0_1478869490613.csv"
+},
+{
+"nearest_neighbor" : "eBay.com",
+"accuracy" : 0.255327,
+"ground_truth" : "Sears.com",
+"ground_truth_UID" : "data/Sears.com_5_0_1478869567415.csv"
+},
+{
+"nearest_neighbor" : "Kmart.com",
+"accuracy" : 0.176463,
+"ground_truth" : "Sears.com",
+"ground_truth_UID" : "data/Sears.com_6_0_1478869645275.csv"
+},
+{
+"nearest_neighbor" : "Kmart.com",
+"accuracy" : 0.264895,
+"ground_truth" : "Sears.com",
+"ground_truth_UID" : "data/Sears.com_7_0_1478869725858.csv"
+},
+{
+"nearest_neighbor" : "Sears.com",
+"accuracy" : 0.255376,
+"ground_truth" : "Sears.com",
+"ground_truth_UID" : "data/Sears.com_8_0_1478869805715.csv"
+},
+{
+"nearest_neighbor" : "Kmart.com",
+"accuracy" : 0.207804,
+"ground_truth" : "Sears.com",
+"ground_truth_UID" : "data/Sears.com_9_0_1478869879688.csv"
+},
+{
+"nearest_neighbor" : "OldNavy.com",
+"accuracy" : 0.202276,
+"ground_truth" : "Walmart.com",
+"ground_truth_UID" : "data/Walmart.com_10_0_1478866013319.csv"
+},
+{
+"nearest_neighbor" : "eBay.com",
+"accuracy" : 0.257160,
+"ground_truth" : "Walmart.com",
+"ground_truth_UID" : "data/Walmart.com_1_0_1478865058689.csv"
+},
+{
+"nearest_neighbor" : "eBay.com",
+"accuracy" : 0.337434,
+"ground_truth" : "Walmart.com",
+"ground_truth_UID" : "data/Walmart.com_2_0_1478865149873.csv"
+},
+{
+"nearest_neighbor" : "eBay.com",
+"accuracy" : 0.204293,
+"ground_truth" : "Walmart.com",
+"ground_truth_UID" : "data/Walmart.com_3_0_1478865239900.csv"
+},
+{
+"nearest_neighbor" : "OldNavy.com",
+"accuracy" : 0.204759,
+"ground_truth" : "Walmart.com",
+"ground_truth_UID" : "data/Walmart.com_4_0_1478865331723.csv"
+},
+{
+"nearest_neighbor" : "Walmart.com",
+"accuracy" : 0.256236,
+"ground_truth" : "Walmart.com",
+"ground_truth_UID" : "data/Walmart.com_5_0_1478865460186.csv"
+},
+{
+"nearest_neighbor" : "Sears.com",
+"accuracy" : 0.265625,
+"ground_truth" : "Walmart.com",
+"ground_truth_UID" : "data/Walmart.com_6_0_1478865608529.csv"
+},
+{
+"nearest_neighbor" : "Walmart.com",
+"accuracy" : 0.263155,
+"ground_truth" : "Walmart.com",
+"ground_truth_UID" : "data/Walmart.com_7_0_1478865697365.csv"
+},
+{
+"nearest_neighbor" : "eBay.com",
+"accuracy" : 0.256253,
+"ground_truth" : "Walmart.com",
+"ground_truth_UID" : "data/Walmart.com_8_0_1478865783058.csv"
+},
+{
+"nearest_neighbor" : "WomanWithin.com",
+"accuracy" : 0.510970,
+"ground_truth" : "WomanWithin.com",
+"ground_truth_UID" : "data/WomanWithin.com_10_0_1478875729451.csv"
+},
+{
+"nearest_neighbor" : "WomanWithin.com",
+"accuracy" : 0.511546,
+"ground_truth" : "WomanWithin.com",
+"ground_truth_UID" : "data/WomanWithin.com_1_0_1478874998518.csv"
+},
+{
+"nearest_neighbor" : "WomanWithin.com",
+"accuracy" : 0.267044,
+"ground_truth" : "WomanWithin.com",
+"ground_truth_UID" : "data/WomanWithin.com_2_0_1478875083721.csv"
+},
+{
+"nearest_neighbor" : "WomanWithin.com",
+"accuracy" : 0.506994,
+"ground_truth" : "WomanWithin.com",
+"ground_truth_UID" : "data/WomanWithin.com_3_0_1478875161711.csv"
+},
+{
+"nearest_neighbor" : "WomanWithin.com",
+"accuracy" : 0.517961,
+"ground_truth" : "WomanWithin.com",
+"ground_truth_UID" : "data/WomanWithin.com_4_0_1478875244312.csv"
+},
+{
+"nearest_neighbor" : "WomanWithin.com",
+"accuracy" : 0.342718,
+"ground_truth" : "WomanWithin.com",
+"ground_truth_UID" : "data/WomanWithin.com_5_0_1478875326737.csv"
+},
+{
+"nearest_neighbor" : "WomanWithin.com",
+"accuracy" : 0.347739,
+"ground_truth" : "WomanWithin.com",
+"ground_truth_UID" : "data/WomanWithin.com_6_0_1478875406947.csv"
+},
+{
+"nearest_neighbor" : "WomanWithin.com",
+"accuracy" : 0.337391,
+"ground_truth" : "WomanWithin.com",
+"ground_truth_UID" : "data/WomanWithin.com_7_0_1478875487651.csv"
+},
+{
+"nearest_neighbor" : "WomanWithin.com",
+"accuracy" : 0.512776,
+"ground_truth" : "WomanWithin.com",
+"ground_truth_UID" : "data/WomanWithin.com_8_0_1478875570052.csv"
+},
+{
+"nearest_neighbor" : "WomanWithin.com",
+"accuracy" : 0.264956,
+"ground_truth" : "WomanWithin.com",
+"ground_truth_UID" : "data/WomanWithin.com_9_0_1478875651953.csv"
+},
+{
+"nearest_neighbor" : "LLBean.com",
+"accuracy" : 0.335890,
+"ground_truth" : "eBay.com",
+"ground_truth_UID" : "data/eBay.com_10_0_1478866827301.csv"
+},
+{
+"nearest_neighbor" : "eBay.com",
+"accuracy" : 0.509033,
+"ground_truth" : "eBay.com",
+"ground_truth_UID" : "data/eBay.com_1_0_1478866095337.csv"
+},
+{
+"nearest_neighbor" : "eBay.com",
+"accuracy" : 0.346448,
+"ground_truth" : "eBay.com",
+"ground_truth_UID" : "data/eBay.com_2_0_1478866175882.csv"
+},
+{
+"nearest_neighbor" : "LLBean.com",
+"accuracy" : 0.346253,
+"ground_truth" : "eBay.com",
+"ground_truth_UID" : "data/eBay.com_3_0_1478866256761.csv"
+},
+{
+"nearest_neighbor" : "eBay.com",
+"accuracy" : 0.347184,
+"ground_truth" : "eBay.com",
+"ground_truth_UID" : "data/eBay.com_4_0_1478866339077.csv"
+},
+{
+"nearest_neighbor" : "LLBean.com",
+"accuracy" : 0.507594,
+"ground_truth" : "eBay.com",
+"ground_truth_UID" : "data/eBay.com_5_0_1478866421338.csv"
+},
+{
+"nearest_neighbor" : "LLBean.com",
+"accuracy" : 0.343802,
+"ground_truth" : "eBay.com",
+"ground_truth_UID" : "data/eBay.com_6_0_1478866501548.csv"
+},
+{
+"nearest_neighbor" : "LLBean.com",
+"accuracy" : 0.508769,
+"ground_truth" : "eBay.com",
+"ground_truth_UID" : "data/eBay.com_7_0_1478866588898.csv"
+},
+{
+"nearest_neighbor" : "eBay.com",
+"accuracy" : 0.354265,
+"ground_truth" : "eBay.com",
+"ground_truth_UID" : "data/eBay.com_8_0_1478866669954.csv"
+},
+{
+"nearest_neighbor" : "LLBean.com",
+"accuracy" : 0.500397,
+"ground_truth" : "eBay.com",
+"ground_truth_UID" : "data/eBay.com_9_0_1478866746264.csv"
+}
+],
+"result" : {
+"successes" : 82,
+"trials" : 120,
+"accuracy" : 68.333336
+}
+}
