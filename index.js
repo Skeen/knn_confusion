@@ -14,15 +14,26 @@ function data_to_sites(data)
     return sites;
 }
 
-function data_to_confusion(data)
+function data_to_confusion(data, opt)
 {
     var confusion_matrix = {};
     // Start counting
     data.forEach(function(element)
     {
-        // TODO: Clean-up
-        confusion_matrix[element.ground_truth] = (confusion_matrix[element.ground_truth] || {});
-        confusion_matrix[element.ground_truth][element.nearest_neighbor] = (confusion_matrix[element.ground_truth][element.nearest_neighbor] || 0) + 1;
+        if(opt.fractional)
+        {
+            element.neighbors.forEach(function(object)
+            {
+                confusion_matrix[element.ground_truth] = (confusion_matrix[element.ground_truth] || {});
+                confusion_matrix[element.ground_truth][object.neighbor] = (confusion_matrix[element.ground_truth][object.neighbor] || 0) + object.percentage;
+            });
+        }
+        else
+        {
+            // TODO: Clean-up
+            confusion_matrix[element.ground_truth] = (confusion_matrix[element.ground_truth] || {});
+            confusion_matrix[element.ground_truth][element.nearest_neighbor] = (confusion_matrix[element.ground_truth][element.nearest_neighbor] || 0) + 1;
+        }
     });
 
     return confusion_matrix;
@@ -106,7 +117,7 @@ function confusion_to_latex(sites, confusion_matrix, opt)
         }
         sites.forEach(function(neighbor)
         {
-            var value = (confusion_matrix[ground][neighbor] || 0);
+            var value = Math.floor((confusion_matrix[ground][neighbor] || 0) * 100) / 100;
             if(opt.color && value != 0)
             {
                 var color = (ground == neighbor ? "green" : "red");
@@ -138,6 +149,7 @@ options
   .option('-x, --alias', 'Shorten header row for large tables')
   .option('-v, --verbose', 'Print A LOT of output')
   .option('-s, --standalone', 'Print a self-contained LaTeX document')
+  .option('-f, --fractional', 'Generate a fractional confusion matrix')
   .parse(process.argv);
 
 var input_file = options.args[0];
@@ -191,7 +203,7 @@ fs.readFile(input_file, 'utf8', function (err,data)
     if(options.verbose)
         console.log(sites);
 
-    var confusion = data_to_confusion(json.data);
+    var confusion = data_to_confusion(json.data, options);
     if(options.verbose)
         console.log(confusion);
 
