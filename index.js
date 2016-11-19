@@ -425,14 +425,14 @@ fs.readFile(input_file, 'utf8', function(err,data)
 	if(options.knn > 0)
 	{
 		json.map(
-			function(element, i, arr)
+			function(element)
 			{
 				element.neighbours.sort(
 					function(a, b)
 					{
-						return a.distance > b.distance;
+						return a.distance - b.distance;
 					});
-				element.neighbours.length = options.knn;
+				element.neighbours.length = Math.min(options.knn, element.neighbours.length);
 			});
 	}
 
