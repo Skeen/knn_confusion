@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js -sc example/data.json | lualatex",
+    "start": "node index.js -lscx example/data.json | lualatex",
     "predist": "mkdir -p dist; npm install; npm install browserify",
     "dist": "./node_modules/browserify/bin/cmd.js -s knn_confusion --bare index.js -o dist/knn_confusion.js",
     "clean": "rm -rf dist node_modules",

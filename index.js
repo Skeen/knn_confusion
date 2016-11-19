@@ -318,6 +318,7 @@ options
   .option('-,--', '')
   .option('-,--', 'Confusion-Matrix:')
   .option('-f, --fractional', 'Generate a fractional confusion matrix')
+  //.option('-k, --knn <number>', 'Consider only the 'n' nearest neighbours')
   //.option('-w, --weight <name>', 'Utilize the specified weight function')
   .option('-,--', '')
   .option('-,--', 'Summary:')
