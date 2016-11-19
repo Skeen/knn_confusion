@@ -72,20 +72,22 @@ function data_to_confusion(data, opt)
         if(opt.fractional)
         {
             var weights = calculate_weights(element);
-            /* // TODO: Fix this shit
+
+            // TODO: Fix this shit
+			
             var percentages = calculate_percentages(weights);
             Object.keys(percentages).forEach(function(key)
             {
                 var elem = percentages[key];
+				//console.log("key: ", key, " value: ", elem);
                 fill(element.ground_truth.tag, key, elem);
             });
-            */
             /*
             element.neighbours.forEach(function(neighbour)
             {
                 fill(element.ground_truth.tag, neighbour.tag, weights[neighbour.tag]);
             });
-            */
+			*/
         }
         else
         {
