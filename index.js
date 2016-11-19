@@ -69,28 +69,29 @@ function data_to_confusion(data, opt)
     // Start counting
     data.forEach(function(element)
     {
-        if(opt.fractional)
-        {
-            var weights = calculate_weights(element);
+    	var weights = calculate_weights(element);
+        var percentages = calculate_percentages(weights);
 
-            // TODO: Fix this shit
-			
-            var percentages = calculate_percentages(weights);
-            Object.keys(percentages).forEach(function(key)
-            {
-                var elem = percentages[key];
+		if(opt.fractional)
+		{
+       		Object.keys(percentages).forEach(function(key)
+			{
+        	    var elem = percentages[key];
 				//console.log("key: ", key, " value: ", elem);
-                fill(element.ground_truth.tag, key, elem);
-            });
-            /*
-            element.neighbours.forEach(function(neighbour)
-            {
-                fill(element.ground_truth.tag, neighbour.tag, weights[neighbour.tag]);
-            });
-			*/
-        }
-        else
-        {
+	
+    	        fill(element.ground_truth.tag, key, elem);
+	        });
+		}
+		else if(opt.fractInt)
+		{
+			var closest_UID = Object.keys(percentages).reduce(function(a, b)
+			{	
+				return percentages[a] > percentages[b] ? a : b;
+			});
+			fill(element.ground_truth.tag, closest_UID, 1);
+		}
+		else
+		{
             // Find the nearest neighbour
             var nearest_neighbour = element.neighbours.reduce(function(a,b)
             {
@@ -98,7 +99,7 @@ function data_to_confusion(data, opt)
             });
 
             fill(element.ground_truth.tag, nearest_neighbour.tag, 1);
-        }
+		}
     });
 
     return confusion_matrix;
@@ -320,7 +321,8 @@ options
   .option('-,--', '')
   .option('-,--', 'Confusion-Matrix:')
   .option('-f, --fractional', 'Generate a fractional confusion matrix')
-  //.option('-k, --knn <number>', 'Consider only the 'n' nearest neighbours')
+  .option('-F, --fractInt', 'Generate Integral confusion matrix using fractionals')
+  .option('-k, --knn <number>', 'Consider only the \'n\' nearest neighbours', parseInt)
   //.option('-w, --weight <name>', 'Utilize the specified weight function')
   .option('-,--', '')
   .option('-,--', 'Summary:')
@@ -419,6 +421,20 @@ fs.readFile(input_file, 'utf8', function(err,data)
         console.log(sites);
         console.log();
     }
+
+	if(options.knn > 0)
+	{
+		json.map(
+			function(element, i, arr)
+			{
+				element.neighbours.sort(
+					function(a, b)
+					{
+						return a.distance > b.distance;
+					});
+				element.neighbours.length = options.knn;
+			});
+	}
 
     var confusion = data_to_confusion(json, options);
     // Only if dump confusion matrix, if we aren't already doing so
