@@ -329,14 +329,6 @@ function shuffle(a) {
 }
 function modelling(json)
 {
-	//console.log("[");
-
-	json = json.filter(function(e)
-		{
-			//return (e.ground_truth.tag == "BestBuy.com" || e.ground_truth.tag == "Kohls.com" || e.ground_truth.tag == "eBay.com");
-			return e.ground_truth.tag == "Kohls.com";
-		})
-
 	var data = json.reduce(
 		function(acc, query)
 		{
@@ -346,8 +338,6 @@ function modelling(json)
 				{
 					return neighbour.tag == tag;
 				});
-			shuffle(filtered);
-			filtered.splice(0,(filtered.length/1.25));
 			var sum = filtered.reduce(
 					function(sum, element)
 					{
@@ -373,12 +363,10 @@ function modelling(json)
 				{
 					return sum.plus((new BigNumber(neighbour.distance).sub(mean)).pow(2));
 				}, new BigNumber(0));
-			//console.log("variance: ", variance, " count: ", site.neighbours.length);
 			variance = variance.div(site.neighbours.length);
-			//console.log("Tag: ", tag, " variance: ", variance.sqrt().toString(), " count: ", site.neighbours.length);
 			return {tag : tag, mean : mean, variance : variance};
 		});
-	return modelled.pop().variance.sqrt().toString();
+	return modelled;
 }
 
 var options = require('commander');
@@ -498,13 +486,8 @@ fs.readFile(input_file, 'utf8', function(err,data)
 	//  then add these to the json.
 	if(options.modelling)
 	{
-		var num = 10000000
-		for(var i=0; i < num; i++)
-		{
-			var out = modelling(json);
-			if(i < num -1)
-			console.log(out);
-		}
+		var out = modelling(json);
+		console.log(JSON.stringify(out));
 		return;
 	}
 
