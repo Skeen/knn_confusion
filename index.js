@@ -364,7 +364,7 @@ function modelling(json)
 					return sum.plus((new BigNumber(neighbour.distance).sub(mean)).pow(2));
 				}, new BigNumber(0));
 			variance = variance.div(site.neighbours.length);
-			return {tag : tag, mean : mean, variance : variance};
+			return {tag : tag, mean : mean, std_dev : variance.sqrt().toString() , variance : variance};
 		});
 	return modelled;
 }
