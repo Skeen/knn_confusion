@@ -1,3 +1,4 @@
+
 function data_to_sites(data)
 {
     // TODO: Clean-up and prettify
@@ -310,6 +311,76 @@ function confusion_to_accuracy(sites, confusion_matrix, opt)
 
 }
 
+
+var BigNumber = require('bignumber.js');
+BigNumber.config({DECIMAL_PLACES: 10, ROUNDING_MODE: 4})
+function roundAt(num, n)
+{
+	var floored = Math.floor(num);
+	var scaler = Math.pow(10,n);
+	var scaled = Math.round((num-floored)*scaler)/scaler;
+	return floored + scaled;
+}
+function shuffle(a) {
+    for (let i = a.length; i; i--) {
+        let j = Math.floor(Math.random() * i);
+        [a[i - 1], a[j]] = [a[j], a[i - 1]];
+    }
+}
+function modelling(json)
+{
+	//console.log("[");
+
+	json = json.filter(function(e)
+		{
+			//return (e.ground_truth.tag == "BestBuy.com" || e.ground_truth.tag == "Kohls.com" || e.ground_truth.tag == "eBay.com");
+			return e.ground_truth.tag == "Kohls.com";
+		})
+
+	var data = json.reduce(
+		function(acc, query)
+		{
+			var tag = query.ground_truth.tag;
+			var filtered = query.neighbours.filter(
+				function(neighbour)
+				{
+					return neighbour.tag == tag;
+				});
+			shuffle(filtered);
+			filtered.splice(0,(filtered.length/1.25));
+			var sum = filtered.reduce(
+					function(sum, element)
+					{
+						return sum + element.distance;
+					}, 0);
+			
+			acc[tag] = (acc[tag] || {});
+			if(acc[tag].neighbours)
+				acc[tag].neighbours = acc[tag].neighbours.concat(filtered);
+			else
+				acc[tag].neighbours = filtered;
+			acc[tag].sum = (acc[tag].sum || 0) + sum;
+			return acc;
+		}, {});
+	
+	var modelled = Object.keys(data).map(
+		function(tag)
+		{
+			var site = data[tag];
+			var mean = new BigNumber(roundAt(site.sum, 5)).div(site.neighbours.length);
+			var variance = site.neighbours.reduce(
+				function(sum, neighbour)
+				{
+					return sum.plus((new BigNumber(neighbour.distance).sub(mean)).pow(2));
+				}, new BigNumber(0));
+			//console.log("variance: ", variance, " count: ", site.neighbours.length);
+			variance = variance.div(site.neighbours.length);
+			//console.log("Tag: ", tag, " variance: ", variance.sqrt().toString(), " count: ", site.neighbours.length);
+			return {tag : tag, mean : mean, variance : variance};
+		});
+	return modelled.pop().variance.sqrt().toString();
+}
+
 var options = require('commander');
 
 function increaser(v, total) { return total + 1; };
@@ -318,6 +389,7 @@ options
   .version('0.0.1')
   .usage('[options] <file>')
   .option('-v, --verbose', 'Print more information', increaser, 0)
+  .option('-m --modelling', 'Perform modelling to get mean and standard deviation')
   .option('-,--', '')
   .option('-,--', 'Confusion-Matrix:')
   .option('-f, --fractional', 'Generate a fractional confusion matrix')
@@ -422,6 +494,21 @@ fs.readFile(input_file, 'utf8', function(err,data)
         console.log();
     }
 
+	// Determine the mean and standard deviation
+	//  then add these to the json.
+	if(options.modelling)
+	{
+		var num = 10000000
+		for(var i=0; i < num; i++)
+		{
+			var out = modelling(json);
+			if(i < num -1)
+			console.log(out);
+		}
+		return;
+	}
+
+	// Keep only the k neighbours with smallest distance
 	if(options.knn > 0)
 	{
 		json.map(
@@ -438,14 +525,14 @@ fs.readFile(input_file, 'utf8', function(err,data)
 
     var confusion = data_to_confusion(json, options);
     // Only if dump confusion matrix, if we aren't already doing so
-    if(options.verbose && (options.resume || options.latex))
+    if(options.verbose && (options.resume))
     {
         console.log("Confusion Matrix:");
         console.log(confusion);
         console.log();
     }
     // Dump confusion matrix
-    if(!(options.resume || options.latex))
+    if(!(options.resume || options.latex || options.modelling))
         console.log(confusion);
 
     // Enable barriers
