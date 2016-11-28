@@ -364,9 +364,86 @@ function modelling(json)
 					return sum.plus((new BigNumber(neighbour.distance).sub(mean)).pow(2));
 				}, new BigNumber(0));
 			variance = variance.div(site.neighbours.length);
-			return {tag : tag, mean : mean, std_dev : variance.sqrt().toString() , variance : variance};
+			return {tag : tag, mean : mean, std_dev : variance.sqrt().toString(), variance : variance};
 		});
 	return modelled;
+}
+
+function statistics(json, model, num_dev, cutoff)
+{
+	var json = json.filter(
+		function(element)
+		{
+			element.neighbours = element.neighbours.filter(
+				function(site)
+				{
+					var site_model = model.find(
+						function(model_site)
+						{
+							return(model_site.tag == site.tag);
+						});
+					var conf_interval_upper = parseFloat(site_model.mean) + num_dev*site_model.std_dev;
+					var conf_interval_lower = parseFloat(site_model.mean) - num_dev*site_model.std_dev;
+					var result = site.distance < conf_interval_upper && site.distance > conf_interval_lower;
+					//if(element.ground_truth.tag == "BestBuy.com")
+					//console.log(result,"=",conf_interval_upper, ">" , site.distance, ">", conf_interval_lower);
+					return site.distance < conf_interval_upper && site.distance > conf_interval_lower;
+				});
+			//console.log("neighbours", element.neighbours.length);
+			if(element.neighbours.length < 1)
+			{
+				console.error("Unclassifiable:", element.ground_truth.UID);
+				return false;
+			}
+			else
+				return true;
+		});
+
+	// If a cutoff is defined, remove neighbours
+	// with has less than cutoff likely neighbours of the same tag.
+	if(cutoff)
+	{
+		var site_name = "";
+		var site_occurances = Number.NEGATIVE_INFINITY;
+		
+		json = json.filter(
+			function(element)
+			{
+				//Remove elements if there arent enough occurances of that site left.
+				element.neighbours = element.neighbours.filter(
+					function(site)
+					{
+						// Get number of occurances of this site, 
+						// if thats not already what is saved.
+						if(site.tag != site_name)
+						{
+							//console.log("site name was changed:", site_name, "site tag:",  site.tag)
+							site_name = site.tag;
+							site_occurances = element.neighbours.reduce(
+								function(sum, e)
+								{
+									//console.log("tag",e.tag,"name",site_name)
+									if(e.tag == site_name)
+										return sum+1;
+									else
+										return sum;
+								}, 0);
+						}
+						return site_occurances > cutoff;
+					});
+
+				if(element.neighbours.length < 1)
+				{
+					console.error("Unclassifiable after cutoff:", element.ground_truth.UID);
+					return false;
+				}
+				else
+					return true;
+
+			});
+	}
+
+	return json;
 }
 
 var options = require('commander');
@@ -377,7 +454,13 @@ options
   .version('0.0.1')
   .usage('[options] <file>')
   .option('-v, --verbose', 'Print more information', increaser, 0)
-  .option('-m --modelling', 'Perform modelling to get mean and standard deviation')
+  .option('-m, --modelling', 'Perform modelling to get mean and standard deviation')
+  .option('-S, --statistics <file>', 'Use statistical modelling to exclude unlikely neighbours')
+  .option('-,--')
+  .option('-,--', 'Requires Statistics:')
+  .option('-n, --statistics-deviation <number>', 'Number of standard deviations to use.', parseFloat)
+  .option('-q, --statistics-cutoff <number>', 'Cut neighbours of site, if less than n are statistically likely.', parseInt)
+  //.option('-p, --statistics-cutoff-percentage <number>', 'Cut neighbours of site, if less than n% are statistically likely.', parseFloat)
   .option('-,--', '')
   .option('-,--', 'Confusion-Matrix:')
   .option('-f, --fractional', 'Generate a fractional confusion matrix')
@@ -482,6 +565,30 @@ fs.readFile(input_file, 'utf8', function(err,data)
         console.log();
     }
 
+	// DEBUGGING TODO: REMOVE THESE
+	/*
+	json = json.filter(function(e)
+		{
+			e.ground_truth.tag == "BestBuy.com";
+		});
+	*/
+	/*
+	json = json.filter(function(e)
+		{
+			return e.ground_truth.tag == "BestBuy.com";
+		});
+	*/
+
+	// Filter out neighbours with distance 0, 
+	// there shouldnt be any, but do it just in case.
+	json.forEach(function(e)
+		{
+			e.neighbours = e.neighbours.filter(function(site)
+				{
+					return site.distance > 0;
+				});
+		})
+
 	// Determine the mean and standard deviation
 	//  then add these to the json.
 	if(options.modelling)
@@ -489,6 +596,18 @@ fs.readFile(input_file, 'utf8', function(err,data)
 		var out = modelling(json);
 		console.log(JSON.stringify(out));
 		return;
+	}
+
+	if(options.statistics)
+	{
+		var model_input = fs.readFileSync(options.statistics);
+		var model = JSON.parse(model_input);
+	
+		var num_dev = options.statisticsDeviation || 1.5;
+
+		var cutoff = options.statisticsCutoff || 0;
+
+		json = statistics(json, model, num_dev, cutoff);
 	}
 
 	// Keep only the k neighbours with smallest distance
