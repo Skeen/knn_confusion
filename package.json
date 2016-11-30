@@ -1,7 +1,7 @@
 {
   "name": "knn_confusion",
   "version": "0.0.1",
-  "description": "",
+  "description": "Process knn-dtw data into a knn confusion matrix",
   "main": "index.js",
   "scripts": {
     "start": "node index.js -lscx example/data.json | lualatex",

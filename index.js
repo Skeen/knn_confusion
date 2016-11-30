@@ -1,19 +1,8 @@
+#!/usr/bin/env node
+'use strict';
 
-function data_to_sites(data)
-{
-    // TODO: Clean-up and prettify
-    var sites_object = {};
-    data.forEach(function(element)
-    {
-        sites_object[element.ground_truth.tag] = 0;
-    });
-
-    var sites = [];
-    for( var i in sites_object ) {
-        sites.push(i);
-    }
-    return sites;
-}
+var readline = require('readline');
+var pjson = require('./package.json');
 
 function calculate_weights(element)
 {
@@ -106,212 +95,6 @@ function data_to_confusion(data, opt)
     return confusion_matrix;
 }
 
-function boxes(str)
-{
-    console.log("+" + Array(str.length+1).join('-') + "+");
-    console.log("|" + str + "|");
-    console.log("+" + Array(str.length+1).join('-') + "+");
-};
-
-function confusion_to_latex(sites, confusion_matrix, opt)
-{
-    var write = function(str)
-    {
-        process.stdout.write(str);
-    }
-
-    var tw = function(str)
-    {
-        if(opt.array)
-        {
-            return "\\text{" + str + "}";
-        }
-        else
-        {
-            return str;
-        }
-    }
-
-    var start = function()
-    {
-        if(opt.array)
-        {
-            console.log("\\(");
-            write("\\begin{array}{");
-        }
-        else
-        {
-            write("\\begin{tabular}{");
-        }
-        console.log("|lcl|" + Array(sites.length+1).join('c|') + "} \\hline");
-    }
-
-    var end = function()
-    {
-        if(opt.array)
-        {
-            console.log("\\end{array}");
-            console.log("\\)");
-        }
-        else
-        {
-            console.log("\\end{tabular}");
-        }
-    }
-
-    var header_line = function()
-    {
-        write("\\multicolumn{3}{|c|}{" + tw("X") + "}");
-        sites.forEach(function(site, index)
-        {
-            if(opt.alias)
-            {
-                write(" & " + tw(site));
-            }
-            else
-            {
-                write(" & " + tw("(" + index + ")"));
-            }
-        });
-        console.log(" \\\\ \\hline");
-    }
-
-    if(options.packages && options.color)
-        console.log("Color requires:", "\\usepackage[table]{xcolor}");
-    if(options.packages && options.array)
-        console.log("Array requires:", "\\usepackage{amsmath}");
-
-    if(opt.verbose || opt.barrier)
-        boxes(" LATEX START ");
-
-    if(opt.standalone)
-    {
-        console.log("\\documentclass[crop]{standalone}");
-
-        if(options.color)
-            console.log("\\usepackage[table]{xcolor}");
-
-        if(options.array)
-            console.log("\\usepackage{amsmath}");
-
-        console.log("\\begin{document}");
-    }
-
-    start();
-    header_line();
-    // Confusion matrix itself
-    sites.forEach(function(ground, index)
-    {
-        if(opt.alias)
-        {
-            write("\\multicolumn{3}{|c|}{" + tw(ground) + "}");
-        }
-        else
-        {
-            write(tw(index) + " & : & " + tw(ground));
-        }
-        sites.forEach(function(neighbor)
-        {
-            var value = Math.floor(((confusion_matrix[ground] || {})[neighbor] || 0) * 100) / 100;
-            if(opt.color && value != 0)
-            {
-                var color = (ground == neighbor ? "green" : "red");
-                var sum = sites.reduce(function(a, b) { return a + (confusion_matrix[ground][b] || 0); }, 0);
-                var percent = value / sum * 100;
-
-                write(" & \\cellcolor{" + color + "!" + percent + "}" + value);
-            }
-            else
-            {
-                write(" & " + value);
-            }
-        });
-        console.log(" \\\\ \\hline");
-    });
-    end();
-
-    if(opt.standalone)
-    {
-        console.log("\\end{document}");
-    }
-    if(opt.verbose || opt.barrier)
-        boxes("  LATEX END  ");
-}
-
-function confusion_to_accuracy(sites, confusion_matrix, opt)
-{
-    var trials = 0;
-    var accurate = 0;
-
-    Object.keys(confusion_matrix).forEach(function(ground_truth)
-    {
-        var row = confusion_matrix[ground_truth];
-        Object.keys(row).forEach(function(neighbour)
-        {
-            var count = row[neighbour];
-            trials += count;
-
-            if(ground_truth == neighbour)
-            {
-                accurate += count;
-            }
-        });
-    });
-
-    var accuracy = ((accurate / trials) * 100);
-
-    var result = {};
-    result.accuracy = accuracy;
-
-    // Add trials and num accurate, unless we're super tiny
-    if(opt.resume < 3)
-    {
-        result.trials = trials;
-        result.accurate = accurate;
-    }
-
-    // Add precision and recall, unless we're really tiny
-    if(opt.resume < 2)
-    {
-        // NOTE: See http://stats.stackexchange.com/a/51301
-        // NOTE: Need more; See https://en.wikipedia.org/wiki/Precision_and_recall#
-        var precall = sites.reduce(function(acc, ground_truth)
-        {
-            // Common nominator
-            var nom = ((confusion_matrix[ground_truth] || {})[ground_truth] || 0);
-            // Recall
-            var denom_recall = sites.reduce(function(acc, neighbour)
-            {
-                var count = ((confusion_matrix[ground_truth] || {})[neighbour] || 0);
-                return acc + count;
-            },0);
-            // Precision
-            var denom_precision = sites.reduce(function(acc, neighbour)
-            {
-                var count = ((confusion_matrix[neighbour] || {})[ground_truth] || 0);
-                return acc + count;
-            },0);
-            // Set the output
-            acc[ground_truth] = {};
-            acc[ground_truth].precision = (nom/denom_precision)*100;
-            acc[ground_truth].recall = (nom/denom_recall)*100;
-            // Return the accumulative object
-            return acc;
-        }, {});
-
-        result.precall = precall;
-    }
-
-    // Print out our result
-    if(opt.verbose || opt.barrier)
-        boxes(" JSON  START ");
-    console.log(result);
-    if(opt.verbose || opt.barrier)
-        boxes("  JSON  END  ");
-
-}
-
-
 var BigNumber = require('bignumber.js');
 BigNumber.config({DECIMAL_PLACES: 10, ROUNDING_MODE: 4})
 function roundAt(num, n)
@@ -320,12 +103,6 @@ function roundAt(num, n)
 	var scaler = Math.pow(10,n);
 	var scaled = Math.round((num-floored)*scaler)/scaler;
 	return floored + scaled;
-}
-function shuffle(a) {
-    for (let i = a.length; i; i--) {
-        let j = Math.floor(Math.random() * i);
-        [a[i - 1], a[j]] = [a[j], a[i - 1]];
-    }
 }
 function modelling(json)
 {
@@ -448,12 +225,11 @@ function statistics(json, model, num_dev, cutoff)
 
 var options = require('commander');
 
-function increaser(v, total) { return total + 1; };
-
 options
-  .version('0.0.1')
-  .usage('[options] <file>')
-  .option('-v, --verbose', 'Print more information', increaser, 0)
+  .version(pjson.version)
+  .description(pjson.description + ".")
+  .usage('[options]')
+  .option('-v, --verbose', 'Print more information')
   .option('-m, --modelling', 'Perform modelling to get mean and standard deviation')
   .option('-S, --statistics <file>', 'Use statistical modelling to exclude unlikely neighbours')
   .option('-,--')
@@ -467,18 +243,18 @@ options
   .option('-F, --fractInt', 'Generate Integral confusion matrix using fractionals')
   .option('-k, --knn <number>', 'Consider only the \'n\' nearest neighbours', parseInt)
   //.option('-w, --weight <name>', 'Utilize the specified weight function')
-  .option('-,--', '')
-  .option('-,--', 'Summary:')
-  .option('-r, --resume', 'Print resume of the confusion matrix', increaser, 0)
-  .option('-,--', '')
-  .option('-,--', 'Latex:')
-  .option('-l, --latex', 'Print confusion matrix as LaTeX')
-  .option('-s, --standalone', 'Print a self-contained LaTeX document')
-  .option('-c, --color', 'Add color to output table')
-  .option('-p, --packages', 'Print information about required packages')
-  .option('-x, --alias', 'Shorten header row for large tables')
-  .option('-a, --array', 'Format output as array instead of tabular')
   .option('-h, --help', '');
+
+// Addition help
+options.on('--help', function()
+{
+    console.log('  Examples:');
+    console.log('');
+    console.log('    $ cat input.json | ./index.js \t\t# Output a shortest-distance confusion matrix');
+    console.log('    $ cat input.json | ./index.js -f \t\t# Output a fractional confusion matrix');
+    console.log('    $ cat input.json | ./index.js -f -k5 \t# Output a fractional confusion matrix using 5 neighbours');
+    console.log('');
+});
 
 // Capture the internal helper
 var internal_help = options.help;
@@ -515,53 +291,46 @@ var help = function()
 if(options.help == undefined)
     help();
 
-var input_file = options.args[0];
-if(input_file == undefined)
+var read_timeseries = function(callback)
 {
-    console.error();
-    console.error("Fatal error: No input file provided");
-    help();
-}
+    var rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+      terminal: false
+    });
 
-// TODO: Handle spurious arguments somehow
+    var input = "";
+    rl.on('line', function(line)
+    {
+        input += line;
+    });
 
-var fs = require('fs')
-fs.readFile(input_file, 'utf8', function(err,data) 
+    rl.on('close', function()
+    {
+        var json;
+        try
+        {
+            json = JSON.parse(input);
+        }
+        catch(err)
+        {
+            console.error();
+            console.error("Fatal error: Piped input is not valid JSON!");
+            console.error();
+            console.error(err);
+            process.exit(1);
+        }
+
+        callback(json);
+    });
+};
+
+read_timeseries(function(json)
 {
-    if (err) {
-        console.error();
-        console.error("Fatal error: Unable to open input file");
-        console.error();
-        console.error(err);
-        process.exit(-1);
-    }
-    // Parse the input file as JSON
-    var json;
-    try
-    {
-        json = JSON.parse(data);
-    }
-    catch(err)
-    {
-        console.error();
-        console.error("Fatal error: Input file is not valid JSON!");
-        console.error();
-        console.error(err);
-        process.exit(-1);
-    }
-
-    if(options.verbose >= 3)
+    if(options.verbose)
     {
         console.log("Input json:");
         console.log(json);
-        console.log();
-    }
-
-    var sites = data_to_sites(json);
-    if(options.verbose >= 2)
-    {
-        console.log("Sites found:");
-        console.log(sites);
         console.log();
     }
 
@@ -626,23 +395,5 @@ fs.readFile(input_file, 'utf8', function(err,data)
 	}
 
     var confusion = data_to_confusion(json, options);
-    // Only if dump confusion matrix, if we aren't already doing so
-    if(options.verbose && (options.resume))
-    {
-        console.log("Confusion Matrix:");
-        console.log(confusion);
-        console.log();
-    }
-    // Dump confusion matrix
-    if(!(options.resume || options.latex || options.modelling))
-        console.log(confusion);
-
-    // Enable barriers
-    if(options.resume && options.latex)
-        options.barrier = true;
-
-    if(options.latex)
-        confusion_to_latex(sites, confusion, options);
-    if(options.resume)
-        confusion_to_accuracy(sites, confusion, options);
+    console.log(JSON.stringify(confusion));
 });
