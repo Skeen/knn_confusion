@@ -3,6 +3,7 @@
 
 var readline = require('readline');
 var pjson = require('./package.json');
+var fs = require('fs');
 
 function calculate_weights(element)
 {
