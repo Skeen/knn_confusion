@@ -57,6 +57,7 @@ function data_to_confusion(data, opt)
         confusion_matrix[ground][neighbour] = (confusion_matrix[ground][neighbour] || 0) + increment;
     }
 
+
     // Start counting
     data.forEach(function(element)
     {
@@ -75,11 +76,24 @@ function data_to_confusion(data, opt)
 		}
 		else if(opt.fractInt)
 		{
-			var closest_UID = Object.keys(percentages).reduce(function(a, b)
-			{	
-				return percentages[a] > percentages[b] ? a : b;
+			var percentages_arr = Object.keys(percentages);
+			percentages_arr.sort(function(a,b)
+			{
+				return percentages[a] - percentages[b];
 			});
-			fill(element.ground_truth.tag, closest_UID, 1);
+	
+			percentages_arr.length = Math.min(opt.fractInt, percentages_arr.length);
+
+			var sum = percentages_arr.reduce(function(acc, key)
+				{
+					return acc + percentages[key];
+				}, 0);
+				
+			percentages_arr.forEach(function(key)
+			{
+				var val = percentages[key] / sum;
+				fill(element.ground_truth.tag, key, val);
+			});
 		}
 		else
 		{
@@ -270,8 +284,9 @@ options
   .option('-,--', '')
   .option('-,--', 'Confusion-Matrix:')
   .option('-f, --fractional', 'Generate a fractional confusion matrix')
-  .option('-F, --fractInt', 'Generate Integral confusion matrix using fractionals')
-  .option('-k, --knn <number>', 'Consider only the \'n\' nearest neighbours', parseInt)
+  .option('-F, --fractInt <number>', 'Generate confusion matrix using fractionals, but only with n largest', parseInt)
+  //.option('-c, --fractional-cutoff', 'Remove neighbours with low likeliness', parseFloat)
+  .option('-k, --knn <number>', 'Consider only the \'k\' nearest neighbours', parseInt)
   .option('-c, --knn-cutoff', 'Remove neighbours whose likeliness is less than cutoff', parseFloat)
   //.option('-w, --weight <name>', 'Utilize the specified weight function')
   .option('-h, --help', '');
