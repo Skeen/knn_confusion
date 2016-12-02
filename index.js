@@ -224,6 +224,35 @@ function statistics(json, model, num_dev, cutoff)
 	return json;
 }
 
+function k_nearest(json, n)
+{
+	return json.map(
+		function(element)
+		{
+			element.neighbours.sort(
+				function(a, b)
+				{
+					return a.distance - b.distance;
+				});
+			element.neighbours.length = Math.min(n, element.neighbours.length);
+			return element;
+		});
+
+}
+
+function k_nearest_cutoff(json, cutoff)
+{
+	var modified = false;
+
+	json.forEach(
+		function(element)
+		{
+			
+		});
+
+	return modified;
+}
+
 var options = require('commander');
 
 options
@@ -243,6 +272,7 @@ options
   .option('-f, --fractional', 'Generate a fractional confusion matrix')
   .option('-F, --fractInt', 'Generate Integral confusion matrix using fractionals')
   .option('-k, --knn <number>', 'Consider only the \'n\' nearest neighbours', parseInt)
+  .option('-c, --knn-cutoff', 'Remove neighbours whose likeliness is less than cutoff', parseFloat)
   //.option('-w, --weight <name>', 'Utilize the specified weight function')
   .option('-h, --help', '');
 
@@ -383,16 +413,16 @@ read_timeseries(function(json)
 	// Keep only the k neighbours with smallest distance
 	if(options.knn > 0)
 	{
-		json.map(
-			function(element)
-			{
-				element.neighbours.sort(
-					function(a, b)
-					{
-						return a.distance - b.distance;
-					});
-				element.neighbours.length = Math.min(options.knn, element.neighbours.length);
-			});
+		if(options.knnCutoff)
+		{
+			do
+			{	
+				json = k_nearest(json, options.knn);
+			}
+			while(k_nearest_cutoff(json, options.knnCutoff))
+		}
+		else
+			json = k_nearest(json, options.knn);
 	}
 
     var confusion = data_to_confusion(json, options);
