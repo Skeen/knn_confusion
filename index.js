@@ -259,19 +259,6 @@ function k_nearest(json, n)
 
 }
 
-function k_nearest_cutoff(json, cutoff)
-{
-	var modified = false;
-
-	json.forEach(
-		function(element)
-		{
-			
-		});
-
-	return modified;
-}
-
 var options = require('commander');
 
 options
@@ -292,7 +279,6 @@ options
   .option('-F, --fractInt <number>', 'Generate confusion matrix using fractionals, but only with n largest', parseInt)
   //.option('-c, --fractional-cutoff', 'Remove neighbours with low likeliness', parseFloat)
   .option('-k, --knn <number>', 'Consider only the \'k\' nearest neighbours', parseInt)
-  .option('-c, --knn-cutoff', 'Remove neighbours whose likeliness is less than cutoff', parseFloat)
   //.option('-w, --weight <name>', 'Utilize the specified weight function')
   .option('-h, --help', '');
 
@@ -433,16 +419,7 @@ read_timeseries(function(json)
 	// Keep only the k neighbours with smallest distance
 	if(options.knn > 0)
 	{
-		if(options.knnCutoff)
-		{
-			do
-			{	
-				json = k_nearest(json, options.knn);
-			}
-			while(k_nearest_cutoff(json, options.knnCutoff))
-		}
-		else
-			json = k_nearest(json, options.knn);
+		json = k_nearest(json, options.knn);
 	}
 
     var confusion = data_to_confusion(json, options);
