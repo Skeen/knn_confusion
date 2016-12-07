@@ -176,7 +176,7 @@ function statistics(json, model, num_dev, cutoff)
 						});
 					if(site_model === undefined)
 					{
-						console.error("Neighbour not included in model", site_model)
+						console.error("Neighbour not included in model", site.tag)
 						return false;
 					}
 					var conf_interval_upper = parseFloat(site_model.mean) + num_dev*site_model.std_dev;
