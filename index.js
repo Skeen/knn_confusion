@@ -69,6 +69,15 @@ function data_to_confusion(data, opt)
     {
     	var weights = calculate_weights(element);
         var percentages = calculate_percentages(weights);
+		var weightf = function(distance)
+    	{
+    	    // Trunc to 1 to avoid NaNs
+    	    //return Math.min(1, 1 / distance);
+			var sigma = 100;
+			var r = -1*distance*distance/(2*sigma*sigma);
+    		//console.log("weight", r);
+			return Math.exp(r);
+		}
 
 		if(opt.fractional)
 		{
@@ -104,11 +113,23 @@ function data_to_confusion(data, opt)
 		}
 		else if(opt.vote)
 		{
-			Object.keys(weights).forEach(function(key)
+			var weights = element.neighbours.map(function(neighbour)
 			{
-				var val = weights[key].count / element.neighbours.length;
+				var weight = weightf(neighbour.distance);
+				return {tag : neighbour.tag, weight : weight};
+			});
+
+			var total_weight = weights.reduce(function(acc, weight)
+				{
+					return acc + weight.weight
+				}, 0);
+
+			weights.forEach(function(weight)
+			{
+				var val = weight.weight / total_weight;
+
 				//console.log("wt", weights[key], "val", val);
-				fill(element.ground_truth.tag, key, val);
+				fill(element.ground_truth.tag, weight.tag, val);
 			});
 		}
 		else
