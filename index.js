@@ -8,11 +8,15 @@ var fs = require('fs');
 function calculate_weights(element)
 {
     // Weight function, '1 / distance' ensures that the closest neighbours count the most
-    var weightf = function(distance)
+	var weightf = function(distance)
     {
         // Trunc to 1 to avoid NaNs
         return Math.min(1, 1 / distance);
-    }
+		//var sigma = 1000;
+		//var r = -1*distance*distance/(2*sigma*sigma);
+    	//console.log("weight", r);
+		//return Math.exp(r);
+	}
 
     var weights = {};
     element.neighbours.forEach(function(neighbour)
@@ -23,6 +27,8 @@ function calculate_weights(element)
     });
     return weights;
 }
+
+
 
 function calculate_percentages(weights)
 {
@@ -70,7 +76,7 @@ function data_to_confusion(data, opt)
 			{
         	    var elem = percentages[key];
 				//console.log("key: ", key, " value: ", elem);
-	
+					
     	        fill(element.ground_truth.tag, key, elem);
 	        });
 		}
@@ -79,10 +85,11 @@ function data_to_confusion(data, opt)
 			var percentages_arr = Object.keys(percentages);
 			percentages_arr.sort(function(a,b)
 			{
-				return percentages[a] - percentages[b];
+				return  percentages[b] - percentages[a];
 			});
 	
 			percentages_arr.length = Math.min(opt.fractInt, percentages_arr.length);
+
 
 			var sum = percentages_arr.reduce(function(acc, key)
 				{
@@ -92,6 +99,15 @@ function data_to_confusion(data, opt)
 			percentages_arr.forEach(function(key)
 			{
 				var val = percentages[key] / sum;
+				fill(element.ground_truth.tag, key, val);
+			});
+		}
+		else if(opt.vote)
+		{
+			Object.keys(weights).forEach(function(key)
+			{
+				var val = weights[key].count / element.neighbours.length;
+				//console.log("wt", weights[key], "val", val);
 				fill(element.ground_truth.tag, key, val);
 			});
 		}
@@ -177,14 +193,19 @@ function statistics(json, model, num_dev, cutoff)
 					if(site_model === undefined)
 					{
 						console.error("Neighbour not included in model", site.tag)
-						return false;
+						process.exit(1);
 					}
 					var conf_interval_upper = parseFloat(site_model.mean) + num_dev*site_model.std_dev;
 					var conf_interval_lower = parseFloat(site_model.mean) - num_dev*site_model.std_dev;
 					var result = site.distance < conf_interval_upper && site.distance > conf_interval_lower;
 					//if(element.ground_truth.tag == "BestBuy.com")
 					//console.log(result,"=",conf_interval_upper, ">" , site.distance, ">", conf_interval_lower);
-					return site.distance < conf_interval_upper && site.distance > conf_interval_lower;
+					var filter = site.distance < conf_interval_upper && site.distance > conf_interval_lower;
+					if(options.verbose && !filter)
+					{
+						console.log("Neighbour was filtered", site.tag);
+					}
+					return filter;
 				});
 			//console.log("neighbours", element.neighbours.length);
 			if(element.neighbours.length < 1)
@@ -226,7 +247,13 @@ function statistics(json, model, num_dev, cutoff)
 										return sum;
 								}, 0);
 						}
-						return site_occurances > cutoff;
+						var filter = site_occurances > cutoff;
+						if(options.verbose && !filter)
+						{
+							console.log("site filtered after cutoff", site.tag)
+						}
+
+						return filter;
 					});
 
 				if(element.neighbours.length < 1)
@@ -277,6 +304,7 @@ options
   .option('-,--', 'Confusion-Matrix:')
   .option('-f, --fractional', 'Generate a fractional confusion matrix')
   .option('-F, --fractInt <number>', 'Generate confusion matrix using fractionals, but only with n largest', parseInt)
+  .option('-M, --vote', 'Neighbours vote on right answer')
   //.option('-c, --fractional-cutoff', 'Remove neighbours with low likeliness', parseFloat)
   .option('-k, --knn <number>', 'Consider only the \'k\' nearest neighbours', parseInt)
   //.option('-w, --weight <name>', 'Utilize the specified weight function')
