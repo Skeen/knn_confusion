@@ -77,6 +77,7 @@ function data_to_confusion(data, opt)
 			var r = -1*distance*distance/(2*sigma*sigma);
     		//console.log("weight", r);
 			return Math.exp(r);
+			//return 1;
 		}
 
 		if(opt.fractional)
@@ -224,14 +225,15 @@ function statistics(json, model, num_dev, cutoff)
 					var filter = site.distance < conf_interval_upper && site.distance > conf_interval_lower;
 					if(options.verbose && !filter)
 					{
-						console.log("Neighbour was filtered", site.tag);
+						console.error("Neighbour was filtered", site.tag);
 					}
 					return filter;
 				});
 			//console.log("neighbours", element.neighbours.length);
 			if(element.neighbours.length < 1)
 			{
-				console.error("Unclassifiable:", element.ground_truth.UID);
+				if(options.verbose)
+					console.error("Unclassifiable:", element.ground_truth.UID);
 				return false;
 			}
 			else
@@ -271,7 +273,7 @@ function statistics(json, model, num_dev, cutoff)
 						var filter = site_occurances > cutoff;
 						if(options.verbose && !filter)
 						{
-							console.log("site filtered after cutoff", site.tag)
+							console.error("site filtered after cutoff", site.tag)
 						}
 
 						return filter;
@@ -279,7 +281,8 @@ function statistics(json, model, num_dev, cutoff)
 
 				if(element.neighbours.length < 1)
 				{
-					console.error("Unclassifiable after cutoff:", element.ground_truth.UID);
+					if(options.verbose)
+						console.error("Unclassifiable after cutoff:", element.ground_truth.UID);
 					return false;
 				}
 				else
@@ -415,9 +418,9 @@ read_timeseries(function(json)
 {
     if(options.verbose)
     {
-        console.log("Input json:");
-        console.log(json);
-        console.log();
+        console.error("Input json:");
+        console.error(json);
+        console.error();
     }
 
 	// DEBUGGING TODO: REMOVE THESE
