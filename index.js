@@ -28,8 +28,6 @@ function calculate_weights(element)
     return weights;
 }
 
-
-
 function calculate_percentages(weights)
 {
     var sum = Object.keys(weights).reduce(function(acc, key)
@@ -62,7 +60,6 @@ function data_to_confusion(data, opt)
         confusion_matrix[ground] = (confusion_matrix[ground] || {});
         confusion_matrix[ground][neighbour] = (confusion_matrix[ground][neighbour] || 0) + increment;
     }
-
 
     // Start counting
     data.forEach(function(element)
@@ -413,6 +410,13 @@ var read_timeseries = function(callback)
 
 read_timeseries(function(json)
 {
+    // If input is '{}'
+    if(Object.keys(json).length === 0 && json.constructor === Object)
+    {
+        console.log("{}");
+        return;
+    }
+
     if(options.verbose)
     {
         console.log("Input json:");
