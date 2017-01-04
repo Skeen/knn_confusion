@@ -69,11 +69,14 @@ function data_to_confusion(data, opt)
 		var weightf = function(distance)
     	{
     	    // Trunc to 1 to avoid NaNs
-    	    //return Math.min(1, 1 / distance);
-			var sigma = 100;
-			var r = -1*distance*distance/(2*sigma*sigma);
-    		//console.log("weight", r);
-			return Math.exp(r);
+    	    return Math.min(1, 1 / distance);
+            
+    	    //return Math.min(1, 1 / (distance * distance));
+
+			//var sigma = 100;
+			//var r = -1*distance*distance/(2*sigma*sigma);
+			//return Math.exp(r);
+
 			//return 1;
 		}
 
