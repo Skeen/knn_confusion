@@ -36,6 +36,7 @@ function data_to_confusion(data, opt)
                     var r = -1*distance*distance/(2*sigma*sigma);
                     return Math.exp(r);
 
+                // Either 'v' or 'unset'
                 case "v":
                 case undefined:
                     return 1;
@@ -228,7 +229,6 @@ function k_nearest(json, n)
 			element.neighbours.length = Math.min(n, element.neighbours.length);
 			return element;
 		});
-
 }
 
 var options = require('commander');
