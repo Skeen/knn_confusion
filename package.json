@@ -4,7 +4,7 @@
   "description": "Process knn-dtw data into a knn confusion matrix",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js -lscx example/data.json | lualatex",
+    "start": "cat example/data.json | node index.js -M | python -m json.tool",
     "predist": "mkdir -p dist; npm install; npm install browserify",
     "dist": "./node_modules/browserify/bin/cmd.js -s knn_confusion --bare index.js -o dist/knn_confusion.js",
     "clean": "rm -rf dist node_modules",

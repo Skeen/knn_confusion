@@ -5,51 +5,6 @@ var readline = require('readline');
 var pjson = require('./package.json');
 var fs = require('fs');
 
-function calculate_weights(element)
-{
-    // Weight function, '1 / distance' ensures that the closest neighbours count the most
-	var weightf = function(distance)
-    {
-        // Trunc to 1 to avoid NaNs
-        return Math.min(1, 1 / distance);
-		//var sigma = 1000;
-		//var r = -1*distance*distance/(2*sigma*sigma);
-    	//console.log("weight", r);
-		//return Math.exp(r);
-	}
-
-    var weights = {};
-    element.neighbours.forEach(function(neighbour)
-    {
-        weights[neighbour.tag] = (weights[neighbour.tag] || {});
-        weights[neighbour.tag].weight = (weights[neighbour.tag].weight || 0) + weightf(neighbour.distance);
-        weights[neighbour.tag].count = (weights[neighbour.tag].count || 0) + 1;
-    });
-    return weights;
-}
-
-function calculate_percentages(weights)
-{
-    var sum = Object.keys(weights).reduce(function(acc, key)
-    {
-        var elem = weights[key];
-        var avg_weight = (elem.weight / elem.count);
-        return acc + avg_weight;
-    }, 0);
-    //console.log("sum", sum);
-
-    var percentages = Object.keys(weights).reduce(function(acc, key)
-    {
-        var elem = weights[key];
-        var avg_weight = (elem.weight / elem.count);
-        acc[key] = avg_weight / sum;
-        return acc;
-    }, {});
-    //console.log("percent", percentages);
-
-    return percentages;
-}
-
 function data_to_confusion(data, opt)
 {
     var confusion_matrix = {};
@@ -64,85 +19,51 @@ function data_to_confusion(data, opt)
     // Start counting
     data.forEach(function(element)
     {
-    	var weights = calculate_weights(element);
-        var percentages = calculate_percentages(weights);
 		var weightf = function(distance)
     	{
-    	    // Trunc to 1 to avoid NaNs
-    	    return Math.min(1, 1 / distance);
-            
-    	    //return Math.min(1, 1 / (distance * distance));
-
-			//var sigma = 100;
-			//var r = -1*distance*distance/(2*sigma*sigma);
-			//return Math.exp(r);
-
-			//return 1;
-		}
-
-		if(opt.fractional)
-		{
-       		Object.keys(percentages).forEach(function(key)
-			{
-        	    var elem = percentages[key];
-				//console.log("key: ", key, " value: ", elem);
-					
-    	        fill(element.ground_truth.tag, key, elem);
-	        });
-		}
-		else if(opt.fractInt)
-		{
-			var percentages_arr = Object.keys(percentages);
-			percentages_arr.sort(function(a,b)
-			{
-				return  percentages[b] - percentages[a];
-			});
-	
-			percentages_arr.length = Math.min(opt.fractInt, percentages_arr.length);
-
-
-			var sum = percentages_arr.reduce(function(acc, key)
-				{
-					return acc + percentages[key];
-				}, 0);
-				
-			percentages_arr.forEach(function(key)
-			{
-				var val = percentages[key] / sum;
-				fill(element.ground_truth.tag, key, val);
-			});
-		}
-		else if(opt.vote)
-		{
-			var weights = element.neighbours.map(function(neighbour)
-			{
-				var weight = weightf(neighbour.distance);
-				return {tag : neighbour.tag, weight : weight};
-			});
-
-			var total_weight = weights.reduce(function(acc, weight)
-				{
-					return acc + weight.weight
-				}, 0);
-
-			weights.forEach(function(weight)
-			{
-				var val = weight.weight / total_weight;
-
-				//console.log("wt", weights[key], "val", val);
-				fill(element.ground_truth.tag, weight.tag, val);
-			});
-		}
-		else
-		{
-            // Find the nearest neighbour
-            var nearest_neighbour = element.neighbours.reduce(function(a,b)
+            switch(options.weight)
             {
-                return (a.distance < b.distance) ? a : b;
-            });
+                case "d":
+                    // Trunc to 1 to avoid NaNs
+                    return Math.min(1, 1 / distance);
 
-            fill(element.ground_truth.tag, nearest_neighbour.tag, 1);
+                case "ds":
+                    // Trunc to 1 to avoid NaNs
+    	            return Math.min(1, 1 / (distance * distance));
+
+                case "gk":
+                    var sigma = 100;
+                    var r = -1*distance*distance/(2*sigma*sigma);
+                    return Math.exp(r);
+
+                case "v":
+                case undefined:
+                    return 1;
+
+                default:
+                    console.error();
+                    console.error("Fatal error: Invalid weight function");
+                    console.error();
+                    process.exit(1);
+            }
 		}
+
+        var weights = element.neighbours.map(function(neighbour)
+        {
+            var weight = weightf(neighbour.distance);
+            return {tag : neighbour.tag, weight : weight};
+        });
+
+        var total_weight = weights.reduce(function(acc, weight)
+        {
+            return acc + weight.weight
+        }, 0);
+
+        weights.forEach(function(weight)
+        {
+            var val = weight.weight / total_weight;
+            fill(element.ground_truth.tag, weight.tag, val);
+        });
     });
 
     return confusion_matrix;
@@ -326,12 +247,13 @@ options
   //.option('-p, --statistics-cutoff-percentage <number>', 'Cut neighbours of site, if less than n% are statistically likely.', parseFloat)
   .option('-,--', '')
   .option('-,--', 'Confusion-Matrix:')
-  .option('-f, --fractional', 'Generate a fractional confusion matrix')
-  .option('-F, --fractInt <number>', 'Generate confusion matrix using fractionals, but only with n largest', parseInt)
-  .option('-M, --vote', 'Neighbours vote on right answer')
   //.option('-c, --fractional-cutoff', 'Remove neighbours with low likeliness', parseFloat)
   .option('-k, --knn <number>', 'Consider only the \'k\' nearest neighbours', parseInt)
-  //.option('-w, --weight <name>', 'Utilize the specified weight function')
+  .option('-w, --weight <name>', 'Utilize the specified weight function; <name> can be:' + '\n' +
+          '\t* <d> \tInverse distance' + '\n' +
+          '\t* <ds> \tInverse distance squared' + '\n' +
+          '\t* <gk> \tGuassian kerneling' + '\n' +
+          '\t* <v> \tPure voting (default)')
   .option('-h, --help', '');
 
 // Addition help
@@ -429,20 +351,6 @@ read_timeseries(function(json)
         console.error(json);
         console.error();
     }
-
-	// DEBUGGING TODO: REMOVE THESE
-	/*
-	json = json.filter(function(e)
-		{
-			e.ground_truth.tag == "BestBuy.com";
-		});
-	*/
-	/*
-	json = json.filter(function(e)
-		{
-			return e.ground_truth.tag == "BestBuy.com";
-		});
-	*/
 
 	// Filter out neighbours with distance 0, 
 	// there shouldnt be any, but do it just in case.
